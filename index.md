@@ -33,14 +33,13 @@
             //Sets color based of range, can be changed to anything
              function getColor(d) {
                 
-                return d > 1000 ? '#800026' :
-                    d > 5000? '#b30000' :
-                    d > 2000? '#e34a33' :
-                    d > 1000? '#fc8d59' :
-                    d > 500? '#fdcc8a' :
-                    d > 200? '#fef0d9' :
-                    d > 10? '' :
-                    '#FFEDA0';
+                return d > 2000 ? '#016c59' :
+                    d > 1000? '#1c9099' :
+                    d > 500? '#67a9cf' :
+                    d > 200? '#a6bddb' :
+                    d > 100? '#d0d1e6' :
+                    d > 50? '#d0d1e6' :
+                    d > 1:'#f6eff7';
                 }
                 
            
