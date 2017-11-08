@@ -73,8 +73,8 @@
                         fillOpacity: 1,
                         radius: 6,
                         weight: 1,
-                        
-                        color: getColor(feature.properties[getFeature(value)])
+                        color: black;
+                        fillcolor: getColor(feature.properties[getFeature(value)])
                     }
                 }
             }
