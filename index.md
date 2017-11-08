@@ -74,7 +74,7 @@
                         radius: 6,
                         weight: 1,
                         color: "black",
-                        fillcolor: getColor(feature.properties[getFeature(value)])
+                        fillColor: getColor(feature.properties[getFeature(value)])
                     }
                 }
             }
