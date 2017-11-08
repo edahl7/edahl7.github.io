@@ -1,37 +1,112 @@
-## Welcome to GitHub Pages
+<html>
+    <head>
+      <title>A Leaflet map!</title>
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+      <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+      <script src="shp.js"></script>
+      <script src="leaflet.shpfile.js"></script>
+      <script src="catiline.js"></script>
+      <script src="Timeline.js"></script>
+      <script src="TimelineSliderControl.js"></script>
+      
 
-You can use the [editor on GitHub](https://github.com/edahl7/edahl7.github.io/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+      <style>
+      #mapId{ width: 900px; height: 500px; }
+      </style>
+    </head>
+    <body>        
+        <div id="mapId"></div>
+        <script>
+            //Options for the shapefile being added, so anything that would be
+            //done normally with L.geoJSON. is contained within here. So popups,
+            //style or any options with the ohio map.
+            var options = {
+                //Setting up popups
+                onEachFeature:function(feature,layer){
+                    if(feature.properties) {
+                        layer.bindPopup(Object.keys(feature.properties).map(function(k) {
+                            if(k === '__color__'){
+                                return;
+                            }
+                            return k + ": " + feature.properties[k];
+                        }).join("<br />"), {
+                            maxHeight: 200
+                        });              
+                    }
+                },
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+                //Style is set here, getColor function is called to find color
+                style: function(feature) {
+                    return {
+                        opacity: 1,
+                        fillOpacity: 0.7,
+                        radius: 6,
+                        color: getColor(returnSemester(feature))
+                    }
+                }
+            }
+            //Sets color based of range, can be changed to anything
+             function getColor(d) {
+                return d > 1000 ? '#800026' :
+                    d > 500 ? '#BD0026' :
+                    d > 200 ? '#E31A1C' :
+                    d > 100 ? '#FC4E2A' :
+                    d > 50 ? '#FD8D3C' :
+                    d > 20 ? '#FEB24C' :
+                    d > 10 ? '#FED976' :
+                    '#FFEDA0';
+            }
+           
+            function returnSemester(d) {
+                return d.properties.AU__12;
+            }
 
-### Markdown
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+            var map = L.map('mapId').setView([40,-83], 7);
+            var ohioMap = new L.Shapefile('ohio.zip',options);
+            ohioMap.addTo(map);
+            
+            //TO DO
+            //Add timeline functionality
+/*             var timeline;
+            var timelineControl;
+             
+            function onLoadData(data){
+                timeline = L.timeline(data, {
+                    style: function(data){
+                        return {
+                            stroke: false,
+                            color: getColorFor(data.properties.name),
+                            fillOpacity: 0.5
+                        }
+                    },
+                waitToUpdateMap: true,
+                onEachFeature: function(feature, layer) {
+                    layer.bindTooltip(feature.properties.name);
+                }
+                });
+                timelineControl = L.timelineSliderControl({
+                    formatOutput: function(date) {
+                        return new Date(date).toLocaleDateString();
+                    },
+                    enableKeyboardControls: true,
+                });
+                timeline.addTo(map);
+                timelineControl.addTo(map);
+                timelineControl.addTimelines(timeline);
+            }   */
+            var semesters = [AU__00, AU__17];
+            /* var semesters = ["AU__00", "SP__01", "AU__01","SP__02", "AU__02", "SP__03","AU__03", "SP__04", "AU__04", "SP__05",
+                             "AU__05", "SP__06", "AU__06","SP__07", "AU__07", "SP__08","AU__08", "SP__09", "AU__09", "SP__10",
+                             "AU__10", "SP__11", "AU__11","SP__12", "AU__12", "SP__13","AU__13", "SP__14", "AU__14", "SP__15",
+                             "AU__15", "SP__16", "AU__16","SP__17", "AU__17"]; */
+            function loopThroughSemesters(semesters) {
+                for (var i = 0; i < semesters.length; i++) {
+                
+                };
+            }
+            loopThroughSemesters(semesters);
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/edahl7/edahl7.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+        </script>
+    </body>
+</html>
