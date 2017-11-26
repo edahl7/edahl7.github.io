@@ -60,7 +60,15 @@
 
             
            
-        
+            function style(feature){
+                    return {
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 1,
+                fillColor: getColor(feature.properties[getFeature(value)])
+            }}
             function style2(feature){
                     return {
                 weight: 2,
@@ -72,49 +80,16 @@
             }
                 }
                 
-                var slider = L.control.slider(function(value) {
-                    
-                    function style(feature){
-                    return {
-                weight: 2,
-                opacity: 1,
-                color: 'white',
-                dashArray: '3',
-                fillOpacity: 1,
-                fillColor: getColor(feature.properties[getFeature(value)])
-            }}
-            var newContent = "<h3>" + longName(getFeature(value))+"</h3>"
-            
-            dialog.setContent(newContent);
-            //dialog.setLocation([0,0]);
-            
-                    var ohio = new L.GeoJSON.AJAX("ohio.geojson",{style: style});
-                    ohio.on('mouseover', function(e){
-                        var info = e.layer.feature.properties['NAME'];
-                        dialogInfo.setContent(info);
-                        dialogInfo.setLocation( [500, 0 ] );
-                        dialog.setlocation([200,0]);
-                                    });
-                    ohio.addTo(map);                    
-                }, {
-                max: 34,
-                value: 1,
-                step:1,
-                showValue: false,
-                size: '660px',
-                collapsed: false,
-                position: 'bottomleft',
-                id: 'slider'
-            });
+                
     
 
-            var map = L.map('mapId',{zoomControl:false}).setView([40.2 ,-83],7); 
-            //name dialog  
-            var dialog = L.control.dialog();
+     
+    function load() {
+   
+               //name dialog  
+               var dialog = new L.control.dialog();
             //title dialog
-            var dialogTitle = L.control.dialog().setContent("<h1> OSU Enrollment</h1>");
-            //info dialog
-            var dialogInfo = L.control.dialog().setContent("Ohio Counties");
+            var dialogTitle = new L.control.dialog().setContent("<h1> OSU Enrollment</h1>");
 
             //legend
             var legend = L.control({position: 'bottomright'});
@@ -133,17 +108,48 @@
 
     return div;
 };
+        
 
-legend.addTo(map);
+        legend.addTo(map);
+
+        var slider = L.control.slider(function(value) {
+            
+            function style(feature){
+            return {
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 1,
+        fillColor: getColor(feature.properties[getFeature(value)])
+    }}
+    var newContent = "<h3>" + longName(getFeature(value))+"</h3>"
+    
+    dialog.setContent(newContent);
+    //dialog.setLocation([0,0]);
+    
+            var ohio = new L.GeoJSON.AJAX("ohio.geojson",{style: style});
+            ohio.on('mouseover', function(e){
+                var info = e.layer.feature.properties['NAME'];
+                    
+                            });
+            ohio.addTo(map);                    
+        }, {
+        max: 34,
+        value: 1,
+        step:1,
+        showValue: false,
+        size: '660px',
+        collapsed: false,
+        position: 'bottomleft',
+        id: 'slider'
+    });
 
             dialogTitle.addTo(map);
             dialogTitle.setLocation([0,0]);
             dialogTitle.setSize([220,120]);
             dialogTitle.lock();
-            dialogInfo.addTo(map);
 
-            dialogInfo.lock();
-            dialogInfo.setLocation( [ 500, 0 ] );
 
             map.touchZoom.disable();
             map.doubleClickZoom.disable();
@@ -155,6 +161,13 @@ legend.addTo(map);
             dialog.lock();
             dialog.setLocation( [ 100, 0 ] );
             dialog.setSize( [ 200  , 100 ] );
+
+  }
+  var map = L.map('mapId',{zoomControl:false}).setView([40.2 ,-83],7); 
+
+        window.onload = load;
+
+         
 
         </script>
     </body>

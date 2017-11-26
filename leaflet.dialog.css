@@ -4,7 +4,9 @@
   padding: 0px;
   text-align: left;
   border-radius: 4px;
+  
   box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+  
 }
 
 .leaflet-control-dialog .leaflet-control-dialog-inner{
