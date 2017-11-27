@@ -1,0 +1,14 @@
+#wrapper {
+    width:1620px;
+    height: 800px;
+}
+#mapID {
+    width:50%;
+    height: 100%;
+}
+#graph {
+    width:50%;
+    height: 100%;
+    left:50%;
+    background-color:red;
+}
