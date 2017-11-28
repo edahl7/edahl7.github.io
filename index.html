@@ -36,12 +36,60 @@
         </div> -->
         <script>
     function triggerMapHighlight(county) {
-        //TODO
+        var layers = ohio.features;
+        for(var i = 0; i < layers.length; i++){
+            console.log(layers[i].feature.properties.countid);
+            if(layers[i].feature.properties.COUNTID === county){
+                var layer = layers[i];
+
+                layer.setStyle({
+                    weight: 5,
+                    color: '#666',
+                    dashArray: '',
+                    fillOpacity: 0.7
+                });
+
+                if(!L.Browser.ie && !L.Browser.opera && !L.Browser.edge){
+                    layer.bringToFront();
+                }
+                info.update(layer.feature.properties);
+            }
+        }
     }
 
     function triggerMapReset(county) {
-        //TODO
+        var layers = ohio.getLayers();
+
+    for(var i = 0; i < layers.length; i++){
+        if (layers[i].features.properties.COUNTID === county) {
+            var layer = layers[i];
+            geojson.resetStyle(layer);
+            info.update();
+        }
     }
+}
+    
+    function highlightFeature(e) {
+		// var layer = e.target;
+
+		// layer.setStyle({
+		// 	weight: 5,
+		// 	color: '#666',
+		// 	dashArray: '',
+		// 	fillOpacity: 0.7
+		// });
+
+		// if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+		// 	layer.bringToFront();
+		// }
+
+		//info.update(layer.feature.properties);
+    }
+    
+    function resetHighlight(e) {
+		//ohio.resetStyle(e.target);
+		//info.update();
+	}
 
     function getColor(d) {
                 
@@ -96,7 +144,7 @@
                 
                 
     
-
+    var ohio = new L.GeoJSON.AJAX("ohio.geojson",{style: style});
      
     function load() {
    
@@ -143,9 +191,9 @@
     //dialog.setLocation([0,0]);
     
             var ohio = new L.GeoJSON.AJAX("ohio.geojson",{style: style});
-            ohio.on('mouseover', function(e){
-                var info = e.layer.feature.properties['NAME'];
-                    
+            ohio.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight
                             });
             ohio.addTo(map);                    
         }, {
@@ -223,7 +271,16 @@ d3.csv("enrollmentdata2.csv", function(error, enrollmentdata2) {
     .selectAll("path")
       .data(enrollmentdata2)
     .enter().append("path")
-      .attr("d", path);
+      .attr("d", path)
+       // hover over line to trigger highlight on map
+     .on("mouseover", function(d) {
+          console.log("Mouse is on " + d.County);
+          triggerMapHighlight(d.County);
+    })
+    .on("mouseout", function (d) {
+          console.log("Mouse moved out of " + d.County);
+          triggerMapReset(d.County);
+    })
 
   // Add a group element for each dimension.
   var g = svg.selectAll(".dimension")
@@ -232,15 +289,8 @@ d3.csv("enrollmentdata2.csv", function(error, enrollmentdata2) {
       .attr("class", "dimension")
       .attr("transform", function(d) { return "translate(" + x(d) + ")"
      })
-     // hover over line to trigger highlight on map
-     .on("mouseover", function(d) {
-          console.log("Mouse is on " + enrollmentdata2[0]);
-          triggerMapHighlight(d.name);
-    })
-    .on("mouseout", function (d) {
-          console.log("Mouse moved out of " + d.county);
-          triggerMapReset(d.name);
-    })
+     
+    
 
   // Add an axis and title.
   g.append("g")
