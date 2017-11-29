@@ -38,7 +38,7 @@
 
             // ************ GLOBALS ****************
         
-            var ohio;
+            var ohio = new L.GeoJSON.AJAX("ohio.geojson",{style: style});
 
             //***************** FUNCTIONS ********************
 
@@ -63,7 +63,7 @@
                         if(!L.Browser.ie && !L.Browser.opera && !L.Browser.edge){
                             layer.bringToFront();
                         }
-                        info.update(layer.feature.properties);
+                        //info.update(layer.feature.properties);
                     }
                 }
             }
@@ -72,10 +72,10 @@
                 var layers = ohio.getLayers();
 
                 for(var i = 0; i < layers.length; i++){
-                    if (layers[i].features.properties.COUNTID === county) {
+                    if (layers[i].feature.properties.COUNTID === county) {
                         var layer = layers[i];
-                        geojson.resetStyle(layer);
-                        info.update();
+                        ohio.resetStyle(layer);
+                        //info.update();
                     }
                 }
             }
@@ -201,7 +201,7 @@
                     dialog.setContent(newContent);
                     //dialog.setLocation([0,0]);
                 
-                    var ohio = new L.GeoJSON.AJAX("ohio.geojson",{style: style});
+                    ohio = new L.GeoJSON.AJAX("ohio.geojson",{style: style});
                     ohio.on({
                         mouseover: highlightFeature,
                         mouseout: resetHighlight
