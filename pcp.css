@@ -11,6 +11,13 @@
     .foreground path {
         fill: none;
         stroke: green;
+        width: 3px;
+    }
+    .foreground path:hover {
+        fill: none;
+        stroke: rgb(11, 236, 236);
+        width: 100px;
+        
     }
 
     .brush .extent {
