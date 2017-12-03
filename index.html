@@ -5,10 +5,10 @@
       <title>OSU Enrollment</title>
       <link rel="stylesheet" href="leaflet.css" />
       <link rel="stylesheet" href="leaflet-slider.css"/>
-      <link rel="stylesheet" href="leaflet-sidebar.css"/>
       <link rel="stylesheet" href="leaflet.dialog.css"/>
       <link rel="stylesheet" href="pcp.css"/>
       <link rel="stylesheet" href="font-awesome.css"/>
+      <link rel="stylesheet" href="L.Control.Sidebar.css" />
       <!-- <link rel="stylesheet" href="indexStyle.css"/> -->
       
 
@@ -19,6 +19,8 @@
       <script src ="leaflet-slider.js"></script>
       <script src ="leaflet-sidebar.js"></script>
       <script src ="Leaflet.Dialog.js"></script>
+      <script src="L.Control.Sidebar.js"></script>
+      
       <script src ="Leaflet.ajax.js"></script>
       <script src="d3.js"></script>
       
@@ -27,19 +29,27 @@
       #mapId{ width: 800px; height: 800px; }
       </style> -->
     </head>
-    <body>        
+    <body>    
+            <div id="sidebar">
+                   
+            </div>    
         <h1>OSU Enrollment</h1>
         <div id="mapId" style="width: 800px; height: 800px"></div>
         <!-- <div id="wrapper">
             <div id="mapId" style="width: 800px; height: 800px">MAP</div>
             <div id="graph" style="margin-left: 820px">GRAPH</div>
         </div> -->
+  
         <script>
 
             // ************ GLOBALS ****************
-        
-            var ohio = new L.GeoJSON.AJAX("ohio.geojson",{style: style});
+    
+            var sidebar = L.control.sidebar('sidebar', {
+                position: 'right',
+                autoPan:false});
 
+            var ohio = new L.GeoJSON.AJAX("ohio.geojson",{style: style});
+            
             //***************** FUNCTIONS ********************
             var info = L.control();
             window.onload = function () {
@@ -79,10 +89,20 @@
                     }
                 }
             }
-            
+            //updating sidebar with demographic data
+            function updateSidebar(e){
+                var layer = e.target;
+                sidebar.setContent("County: " + layer.feature.properties.NAME+"</br>"
+                +"Land Area: "+ layer.feature.properties.ALAND+"<br>"+
+                "Water Area: " + layer.feature.properties.AWATER+"<br>"+
+                longName(getFeature(slider.value))+" Enrollment: " +                
+                layer.feature.properties[getFeature(slider.value)]);
+
+                
+            }
             function highlightFeature(e) {
                  var layer = e.target;
-
+                                //legend
                  layer.setStyle({
                 	weight: 6,
                  	color: '#666',
@@ -127,10 +147,15 @@
                 }
 
             }
+            function mouseOver(e){
+                highlightFeature(e)
+                updateSidebar(e)
+            }
             function onEachFeature(feature, layer) {
                 layer.on({
-                    mouseover: highlightFeature,
+                    mouseover: mouseOver,
                     mouseout: resetHighlight,
+                    
                     //click: zoomToFeature
 
                     
@@ -179,7 +204,8 @@
                 var dialogTitle = new L.control.dialog().setContent("<h1> OSU Enrollment</h1>");
 
                 //legend
-                var legend = L.control({position: 'bottomright'});
+                var legend = L.control({position: 'bottomleft'
+            });
                 legend.onAdd = function (map) {
 
                     var div = L.DomUtil.create('div', 'info legend'),
@@ -196,7 +222,6 @@
                     return div;
                 };
                     
-                legend.addTo(map);
 
                 var slider = L.control.slider(function(value) {
                     
@@ -229,7 +254,8 @@
                     position: 'bottomleft',
                     id: 'slider'
                 });
-                
+    
+         
                 dialogTitle.addTo(map);
                 dialogTitle.setLocation([0,0]);
                 dialogTitle.setSize([220,120]);
@@ -242,11 +268,15 @@
                 map.boxZoom.disable();
                 map.dragging.disable();
                 slider.addTo(map);
-        
+                legend.addTo(map);
+
                 dialog.addTo(map);
                 dialog.lock();
                 dialog.setLocation( [ 100, 0 ] );
                 dialog.setSize( [ 200  , 100 ] );
+                map.addControl(sidebar);
+                sidebar.show();     
+               
 
             }
 
@@ -356,7 +386,7 @@
 
             //********** SET VIEW and ONLOAD *********
 
-            var map = L.map('mapId',{zoomControl:false}).setView([40.2 ,-83],7); 
+            var map = L.map('mapId',{zoomControl:false}).setView([40.4 ,-82],7); 
 
             //window.onload = load;
 
