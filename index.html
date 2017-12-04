@@ -29,11 +29,11 @@
       #mapId{ width: 800px; height: 800px; }
       </style> -->
     </head>
-    <body>    
+    <body> 
+        </div>   
             <div id="sidebar">
                    
             </div>    
-        <h1>OSU Enrollment</h1>
         <div id="mapId" style="width: 800px; height: 800px"></div>
         <!-- <div id="wrapper">
             <div id="mapId" style="width: 800px; height: 800px">MAP</div>
@@ -46,7 +46,8 @@
     
             var sidebar = L.control.sidebar('sidebar', {
                 position: 'right',
-                autoPan:false});
+                autoPan:false,
+                closeButton:false});
 
             var ohio = new L.GeoJSON.AJAX("ohio.geojson",{style: style});
             
@@ -59,7 +60,6 @@
             function triggerMapHighlight(county) {
                 var layers = ohio.getLayers();
                 for(var i = 0; i < layers.length; i++){
-                    console.log(layers[i].feature.properties.countid);
                     if(layers[i].feature.properties.COUNTID === county){
                         var layer = layers[i];
 
@@ -235,7 +235,7 @@
                             fillColor: getColor(feature.properties[getFeature(value)])
                         }
                     }
-                    var newContent = "<h3>" + longName(getFeature(value))+"</h3>"
+                    var newContent = "<h2>" + longName(getFeature(value))+"</h2>"
                 
                     dialog.setContent(newContent);
                     //dialog.setLocation([0,0]);
@@ -257,8 +257,8 @@
     
          
                 dialogTitle.addTo(map);
-                dialogTitle.setLocation([0,0]);
-                dialogTitle.setSize([220,120]);
+                dialogTitle.setLocation([0,220]);
+                dialogTitle.setSize([280,120]);
                 dialogTitle.lock();
 
 
@@ -272,8 +272,8 @@
 
                 dialog.addTo(map);
                 dialog.lock();
-                dialog.setLocation( [ 100, 0 ] );
-                dialog.setSize( [ 200  , 100 ] );
+                dialog.setLocation( [ 68, 250    ] );
+                dialog.setSize( [ 200  , 105 ] );
                 map.addControl(sidebar);
                 sidebar.show();     
                
@@ -326,13 +326,13 @@
                 .data(enrollmentdata2)
                 .enter().append("path")
                 .attr("d", path)
+          
                 // hover over line to trigger highlight on map
+              
                 .on("mouseover", function(d) {
-                    console.log("Mouse is on " + d.County);
                     triggerMapHighlight(d.County);
                 })
                 .on("mouseout", function (d) {
-                    console.log("Mouse moved out of " + d.County);
                     triggerMapReset(d.County);
                 })
 
@@ -358,11 +358,14 @@
             // Add and store a brush for each axis.
             g.append("g")
                 .attr("class", "brush")
-                .each(function(d) { d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brush", brush)); })
+                .each(function(d) { d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brush", brush)); 
+                      
+
+                    })
                 .selectAll("rect")
                 .attr("x", -8)
                 .attr("width", 16);
-            });
+            })
 
 
 
@@ -376,10 +379,12 @@
                 var actives = dimensions.filter(function(p) { return !y[p].brush.empty(); }),
                     extents = actives.map(function(p) { return y[p].brush.extent(); });
                     foreground.style("display", function(d) {
+                        
                         return actives.every(function(p, i) {
                             return extents[i][0] <= d[p] && d[p] <= extents[i][1];
                         }) ? null : "none";
                     });
+
             }  
 
             //************* END PLOT *****************  

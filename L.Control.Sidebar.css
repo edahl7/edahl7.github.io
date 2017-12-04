@@ -17,7 +17,8 @@
     transition: right 0.5s, width 0.5s;
     padding-left: 0; }
     .leaflet-sidebar.right.visible {
-      right: -230px; ; }
+      right: -130px;
+      bottom:100px; }
   .leaflet-sidebar > .leaflet-control {
     height: 100%;
     width: 60%;
@@ -28,8 +29,8 @@
     box-sizing: border-box;
     padding: 8px 24px;
     font-size: 1.1em;
-    background: white;
-    box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
+    background: rgba(0, 0, 0, 0);
+    /*box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);*/
     -webkit-border-radius: 4px;
     border-radius: 4px; }
     .leaflet-touch .leaflet-sidebar > .leaflet-control {

@@ -1,5 +1,8 @@
     svg {
         font: 10px sans-serif;
+        position: absolute;
+        left: 600px;
+        top: 270px;
     }
 
     .background path {
