@@ -13,7 +13,7 @@
 
     .foreground path {
         fill: none;
-        stroke: green;
+        stroke: blue;
         width: 3px;
     }
     .foreground path:hover {
