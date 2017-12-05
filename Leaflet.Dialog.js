@@ -1,7 +1,7 @@
 L.Control.Dialog = L.Control.extend({
   options: {
     size: [ 300, 300 ],
-    minSize: [ 100, 100 ],
+    minSize: [ 50, 50 ],
     maxSize: [ 350, 350 ],
     anchor: [ 250, 250 ],
     position: 'topleft',
