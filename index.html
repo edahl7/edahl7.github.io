@@ -22,7 +22,7 @@
       <script src ="Leaflet.Dialog.js"></script>
       <script src="L.Control.Sidebar.js"></script>
       
-      <script src ="Leaflet.ajax.js"></script>
+      <script src ="ohio.js"></script>
       <script src="d3.js"></script>
       
 
@@ -50,12 +50,14 @@
                 autoPan:false,
                 closeButton:false});
 
-            var ohio = new L.GeoJSON.AJAX("ohio.geojson",{style: style});
+            var ohio;
             //***************** FUNCTIONS ********************
             var info = L.control();
             window.onload = function () {
-                load();
+                 load(); 
             }
+            
+        
 
             function triggerMapHighlight(county) {
                 var layers = ohio.getLayers();
@@ -209,7 +211,7 @@
             // ************** LOAD ***************
 
             function load() {
-                
+                var map = L.map('mapId',{zoomControl:false}).setView([40.4 ,-82],7); 
                 //name dialog  
                 var dialog = new L.control.dialog();
                 //title dialog
@@ -252,7 +254,7 @@
                     dialog.setContent(newContent);
                     //dialog.setLocation([0,0]);
                     
-                    ohio = new L.GeoJSON.AJAX("ohio.geojson",{
+                    ohio = L.geoJSON(geojson,{
                         style: style,
                         onEachFeature: onEachFeature})
                     .addTo(map);                    
@@ -291,6 +293,7 @@
                
 
             }
+        
 
             // ***************** pcpTest.html ********************
 
@@ -403,7 +406,7 @@
 
             //********** SET VIEW and ONLOAD *********
 
-            var map = L.map('mapId',{zoomControl:false}).setView([40.4 ,-82],7); 
+            
 
             //window.onload = load;
 
