@@ -22,7 +22,8 @@
       <script src ="Leaflet.Dialog.js"></script>
       <script src="L.Control.Sidebar.js"></script>
       
-      <script src ="ohio.js"></script>
+      <script src ="Leaflet.ajax.js"></script>
+      <script src="ohio.js"></script>
       <script src="d3.js"></script>
       
 
@@ -30,12 +31,25 @@
       #mapId{ width: 800px; height: 800px; }
       </style> -->
     </head>
-    <body> 
-        </div>   
-            <div id="sidebar">
-                   
-            </div>    
+    <body>    
+        <div id="description">
+                <b>To use this app:</b>
+                <br>
+                    Hover over a county to read the name, number of enrolled students, and percentage of college aged students (18-24)
+                    enrolled at The Ohio State University main campus. Move the slider at the bottom to cycle through spring and autumn
+                    semesters from 2000 to 2017. Use the parallel coordinate plot on the right to see a county's population, unemployment
+                    rate, poverty rate, and median household income for the year 2015. Click and drag along one of the vertical axes to
+                    highlight a subset of the counties. Click on an unselected point along the same axis to unhighlight the subset of counties.
+        
+        </div>
+        <div id="sidebar"></div>    
         <div id="mapId" style="width: 800px; height: 800px"></div>
+        <div id="credits">
+                <br />Authors: Eric Dahl, Tyler Stohr, James Burpee, and Colin Juran 
+                <br />The Ohio State University: Geography 5201, Professor Morteza Karimzadeh
+                <br />Data sources: The Ohio State University Enrollment Services - Analysis and Reporting; American Community Survey (ACS)
+        </div>
+        
         <!-- <div id="wrapper">
             <div id="mapId" style="width: 800px; height: 800px">MAP</div>
             <div id="graph" style="margin-left: 820px">GRAPH</div>
@@ -51,13 +65,10 @@
                 closeButton:false});
 
             var ohio;
-            //***************** FUNCTIONS ********************
             var info = L.control();
             window.onload = function () {
-                 load(); 
+                load();
             }
-            
-        
 
             function triggerMapHighlight(county) {
                 var layers = ohio.getLayers();
@@ -97,7 +108,7 @@
                 sidebar.setContent("County: " + layer.feature.properties.NAME+"</br>"+
                 longName(getFeature(slider.value))+" Enrollment: " +                
                 layer.feature.properties[getFeature(slider.value)]+"<br>"+
-                " College Aged Population: " + layer.feature.properties[getCollegeCol(slider.value)]+"</br>Percent in College: "+
+                " College Aged Population: " + layer.feature.properties[getCollegeCol(slider.value)]+"</br>% of College Pop at OSU: "+
                 ((layer.feature.properties[getFeature(slider.value)]/layer.feature.properties[getCollegeCol(slider.value)])*100).toFixed(2)+"%");
                 
                 
@@ -211,11 +222,11 @@
             // ************** LOAD ***************
 
             function load() {
-                var map = L.map('mapId',{zoomControl:false}).setView([40.4 ,-82],7); 
+                
                 //name dialog  
                 var dialog = new L.control.dialog();
                 //title dialog
-                var dialogTitle = new L.control.dialog().setContent("<h1> OSU Enrollment</h1>");
+                var dialogTitle = new L.control.dialog().setContent("<h1> OSU Enrollment as a Percentage of College Aged Population</h1>");
 
                 //legend
                 var legend = L.control({position: 'bottomleft'
@@ -223,14 +234,14 @@
                 legend.onAdd = function (map) {
 
                     var div = L.DomUtil.create('div', 'info legend'),
-                        grades = [0, 50, 100, 200, 500, 1000, 2000],
+                        grades = [0, .01, .02, .03, .05, .08, .11],
                         labels = [];
 
                     // loop through our density intervals and generate a label with a colored square for each interval
                     for (var i = 0; i < grades.length; i++) {
                         div.innerHTML +=
-                            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+                            '<i style="background:' + getColor(grades[i] + .001, 1) + '"></i> ' +
+                            grades[i]*100 + (grades[i + 1]*100 ? '&ndash;' + grades[i + 1]*100 + '%<br>' : '%+');
                     }
 
                     return div;
@@ -286,14 +297,13 @@
 
                 dialog.addTo(map);
                 dialog.lock();
-                dialog.setLocation( [ 68, 250    ] );
+                dialog.setLocation( [ 120, 250    ] );
                 dialog.setSize( [ 200  , 105 ] );
                 map.addControl(sidebar);
                 sidebar.show();     
                
 
             }
-        
 
             // ***************** pcpTest.html ********************
 
@@ -406,7 +416,7 @@
 
             //********** SET VIEW and ONLOAD *********
 
-            
+            var map = L.map('mapId',{zoomControl:false}).setView([40.4 ,-82],7); 
 
             //window.onload = load;
 

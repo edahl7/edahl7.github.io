@@ -12,3 +12,9 @@
     left:50%;
     background-color:red;
 }
+#credits {
+    position: absolute
+}
+#description {
+    position: absolute
+}
