@@ -15,6 +15,7 @@
       <script src="leaflet.js"></script>
       <script src="shp.js"></script>
       <script src="leaflet.shpfile.js"></script>
+      <script src="leaflet.FileLayer.js"></script>
       <script src="catiline.js"></script>
       <script src ="leaflet-slider.js"></script>
       <script src ="leaflet-sidebar.js"></script>
@@ -50,7 +51,6 @@
                 closeButton:false});
 
             var ohio = new L.GeoJSON.AJAX("ohio.geojson",{style: style});
-            
             //***************** FUNCTIONS ********************
             var info = L.control();
             window.onload = function () {
@@ -92,12 +92,12 @@
             //updating sidebar with demographic data
             function updateSidebar(e){
                 var layer = e.target;
-                sidebar.setContent("County: " + layer.feature.properties.NAME+"</br>"
-                +"Land Area: "+ layer.feature.properties.ALAND+"<br>"+
-                "Water Area: " + layer.feature.properties.AWATER+"<br>"+
+                sidebar.setContent("County: " + layer.feature.properties.NAME+"</br>"+
                 longName(getFeature(slider.value))+" Enrollment: " +                
-                layer.feature.properties[getFeature(slider.value)]);
-
+                layer.feature.properties[getFeature(slider.value)]+"<br>"+
+                " College Aged Population: " + layer.feature.properties[getCollegeCol(slider.value)]+"</br>Percent in College: "+
+                ((layer.feature.properties[getFeature(slider.value)]/layer.feature.properties[getCollegeCol(slider.value)])*100).toFixed(2)+"%");
+                
                 
             }
             function highlightFeature(e) {
@@ -120,20 +120,21 @@
             function resetHighlight(e) {
                 var layer = e.target;
                 ohio.resetStyle(layer);
+                sidebar.setContent();
                 //info.update();
             }
             function zoomToFeature(e) {
                 map.fitBounds(e.target.getBounds());
             }
 
-            function getColor(d) {
-                        
-                return d > 2000? '#016c59' :
-                    d > 1000? '#02818a' :
-                    d > 500? '#3690c0' :
-                    d > 200? '#67a9cf' :
-                    d > 100? '#a6bddb' :
-                    d > 50? '#d0d1e6' :
+            function getColor(enrolled,collegePop) {
+                d = enrolled/collegePop;
+                return d > .11? '#016c59' :
+                    d > .08? '#02818a' :
+                    d > .05? '#3690c0' :
+                    d > .03? '#67a9cf' :
+                    d > .02? '#a6bddb' :
+                    d > .01? '#d0d1e6' :
                     '#f6eff7';
             }
 
@@ -153,6 +154,7 @@
             }
             function onEachFeature(feature, layer) {
                 layer.on({
+                    
                     mouseover: mouseOver,
                     mouseout: resetHighlight,
                     
@@ -172,6 +174,16 @@
                 return semester;
             } 
             
+            function getCollegeCol(value,e){
+                return "enrollment data_collegeAged"+getYear(value);
+
+
+            }
+            function getYear(value){
+                    var years = ["00", "01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","15","15","15"] 
+                var year = years[Math.round(value/2)]
+                return year;
+            } 
             function style(feature){
                     return {
                         weight: 2,
@@ -179,7 +191,7 @@
                         color: 'white',
                         dashArray: '3',
                         fillOpacity: 1,
-                        fillColor: getColor(feature.properties[getFeature(value)])
+                        fillColor: getColor(feature.properties[getFeature(value)],feature.properties[getCollegeCol(value)])
                     }
                 }
 
@@ -224,7 +236,7 @@
                     
 
                 var slider = L.control.slider(function(value) {
-                    
+
                     function style(feature){
                         return {
                             weight: 2,
@@ -232,7 +244,7 @@
                             color: 'white',
                             dashArray: '3',
                             fillOpacity: 1,
-                            fillColor: getColor(feature.properties[getFeature(value)])
+                            fillColor: getColor(feature.properties[getFeature(value)],feature.properties[getCollegeCol(value)])
                         }
                     }
                     var newContent = "<h2>" + longName(getFeature(value))+"</h2>"
