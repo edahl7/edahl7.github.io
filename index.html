@@ -68,7 +68,7 @@
                 load();
             }
 
-            function triggerMapHighlight(county) {
+/*             function triggerMapHighlight(county) {
                 var layers = ohio.getLayers();
                 for(var i = 0; i < layers.length; i++){
                     if(layers[i].feature.properties.COUNTID === county){
@@ -87,6 +87,31 @@
                         //info.update(layer.feature.properties);
                     }
                 }
+            } */
+            function triggerMapHighlight(county) {
+                var layers = ohio.getLayers();
+                for(var i = 0; i < layers.length; i++){
+                    if(layers[i].feature.properties.COUNTID === county){
+                        var layer = layers[i];
+
+                        layer.setStyle({
+                            weight: 5,
+                            color: '#666',
+                            dashArray: '',
+                            fillOpacity: 0.7
+                        });
+
+                        if(!L.Browser.ie && !L.Browser.opera && !L.Browser.edge){
+                            layer.bringToFront();
+                        }
+                        //info.update(layer.feature.properties);
+                        sidebar.setContent("County: " + layer.feature.properties.NAME+"</br>"+
+                        longName(getFeature(slider.value))+" Enrollment: " +                
+                        layer.feature.properties[getFeature(slider.value)]+"<br>"+
+                        " College Aged Population: " + layer.feature.properties[getCollegeCol(slider.value)]+"</br>% of College Aged Pop. at OSU: "+
+                        ((layer.feature.properties[getFeature(slider.value)]/layer.feature.properties[getCollegeCol(slider.value)])*100).toFixed(2)+"%");
+                    }
+                }
             }
 
             function triggerMapReset(county) {
@@ -97,6 +122,7 @@
                         var layer = layers[i];
                         ohio.resetStyle(layer);
                         //info.update();
+                        sidebar.setContent();
                     }
                 }
             }
