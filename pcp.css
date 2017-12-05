@@ -13,12 +13,16 @@
 
     .foreground path {
         fill: none;
+        width: 1px;
         stroke: blue;
-        width: 3px;
+        stroke-width: 2px;
+        stroke-opacity: 1;
+        /*width: 3px;*/
     }
     .foreground path:hover {
         fill: none;
         stroke: rgb(11, 236, 236);
+        stroke-width: 5px;
         width: 100px;
         
     }
